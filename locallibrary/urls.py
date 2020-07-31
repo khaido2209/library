@@ -15,6 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.views.static import serve
+from django.conf.urls import url
+from catalog.views import book_detail_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,12 +29,15 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('book/', book_detail_view)
 ]
 
-urlpatterns += [
-    path('catalog/', include('catalog.urls')),
-]
-
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]
 
 # # Use static() to add url mapping to serve static files during development (only)
 # from django.conf import settings
@@ -39,9 +46,9 @@ urlpatterns += [
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
-# #Add URL maps to redirect the base URL to our application
+#Add URL maps to redirect the base URL to our application
 # from django.views.generic import RedirectView
 # urlpatterns += [
-#     path('', RedirectView.as_view(url='catalog/', permanent=True)),
+#     path('', RedirectView.as_view(url='admin/', permanent=True)),
 # ]
 

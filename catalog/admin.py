@@ -49,8 +49,14 @@ class BookAdmin(admin.ModelAdmin):
      - adds inline addition of book instances in book view (inlines)
     """
     # list_display = ('title', 'author', 'display_genre')
-    list_display = ('title', 'display_genre', 'amount')
+    list_display = ('title', 'display_genre', 'amount','taken','returned','exist','image_tag')
     inlines = [BooksInstanceInline]
+    readonly_fields = ['image_tag']
+    def image_tag(self, obj):
+        return obj.image_tag
+
+    image_tag.short_description = 'image tag'
+    image_tag.allow_tags = True
 
 
 admin.site.register(Book, BookAdmin)
@@ -64,7 +70,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
      - filters that will be displayed in sidebar (list_filter)
      - grouping of fields into sections (fieldsets)
     """
-    list_display = ('book', 'borrower', 'status', 'due_back', 'id')
+    list_display = ('book', 'borrower', 'status', 'borrow_date', 'due_back')
     list_filter = ('book','borrower')
 
     fieldsets = (
@@ -72,24 +78,24 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('book', 'imprint', 'id')
         }),
         ('Availability', {
-            'fields': ('status','due_back', 'borrower')
+            'fields': ('borrow_date','due_back', 'borrower')
         }),
     )
 
 
-def save(self):
-        while self.book == Book.title:
-            for i in (Book.amount):
-                i -= 1
-                if i  >= 0:
-                    Book.amount.append(i)
-                else:
-                    break
-            # print("handle saving -------")
-            # while (self.book == Book.title):
-            #     while (Book.amount > 1):
-            #         Book.amount -= 1
-        return super.save()
+# def save(self):
+#         while self.book == Book.title:
+#             for i in (Book.amount):
+#                 i -= 1
+#                 if i  >= 0:
+#                     Book.amount.append(i)
+#                 else:
+#                     break
+#             # print("handle saving -------")
+#             # while (self.book == Book.title):
+#             #     while (Book.amount > 1):
+#             #         Book.amount -= 1
+#         return super.save()
 
 
 
